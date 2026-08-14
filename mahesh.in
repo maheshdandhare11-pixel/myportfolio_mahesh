@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahesh Dandhare — Electrical Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0E17;
+    --surface: #141924;
+    --surface-2: #1B2230;
+    --line: #232B3A;
+    --line-soft: #1A2130;
+    --indigo: #8B5CF6;
+    --indigo-bright: #A78BFA;
+    --coral: #FB7185;
+    --coral-soft: rgba(251,113,133,0.12);
+    --cyan: #22D3EE;
+    --emerald: #34D399;
+    --amber: #FBBF24;
+    --text: #EDEFF5;
+    --muted: #8790A3;
+    --muted-2: #5B6579;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --ease: cubic-bezier(.16,.8,.24,1);
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  ::selection{ background: var(--indigo); color: #0B0E14; }
+
+  a{ color:inherit; text-decoration:none; }
+
+  .container{ max-width: 1040px; margin:0 auto; padding: 0 32px; }
+
+  /* ================= preloader ================= */
+  #preloader{
+    position: fixed; inset:0; z-index:200;
+    background: var(--bg);
+    display:flex; align-items:center; justify-content:center;
+    transition: opacity .6s var(--ease), visibility .6s var(--ease);
+  }
+  #preloader.done{ opacity:0; visibility:hidden; pointer-events:none; }
+  .pre-mark{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    display:flex; flex-direction:column; align-items:center; gap:18px;
+  }
+  .pre-bar{
+    width: 220px; height:2px; background: var(--line);
+    position:relative; overflow:hidden; border-radius:2px;
+  }
+  .pre-bar::after{
+    content:'';
+    position:absolute; top:0; left:0; height:100%; width:40%;
+    background: linear-gradient(90deg, transparent, var(--cyan), var(--indigo), var(--coral), transparent);
+    animation: preload 1.1s ease-in-out infinite;
+  }
+  @keyframes preload{
+    0%{ transform: translateX(-100%); }
+    100%{ transform: translateX(350%); }
+  }
+
+  /* ================= background grid + glow ================= */
+  .bg-grid{
+    position: fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+  .glow-orb{
+    position: fixed; z-index:0; pointer-events:none;
+    width: 640px; height: 640px; border-radius: 50%;
+    filter: blur(130px); opacity: .18;
+    animation: orbdrift 16s ease-in-out infinite alternate;
+  }
+  .glow-orb.one{ top:-220px; left:-160px; background: var(--coral); }
+  .glow-orb.two{ top: 22%; right:-260px; background: var(--indigo); opacity:.14; animation-delay: -5s; }
+  .glow-orb.three{ bottom:-260px; left: 20%; width:520px; height:520px; background: var(--cyan); opacity:.11; animation-delay: -10s; }
+  @keyframes orbdrift{
+    0%{ transform: translate(0,0) scale(1); }
+    100%{ transform: translate(30px,-40px) scale(1.08); }
+  }
+
+  main, header, footer{ position: relative; z-index: 1; }
+
+  /* ================= nav ================= */
+  header{
+    position: sticky; top:0; z-index:20;
+    padding: 22px 0;
+    transition: padding .35s var(--ease), background .35s var(--ease), border-color .35s var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+  header.scrolled{
+    padding: 14px 0;
+    background: rgba(6,10,16,0.82);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid var(--line);
+  }
+  nav{ display:flex; justify-content:space-between; align-items:center; }
+  .logo{ font-family: var(--mono); font-size: 14px; color: var(--indigo-bright); letter-spacing: .5px; display:flex; align-items:center; gap:8px; }
+  .logo .led{ width:6px; height:6px; border-radius:50%; background: var(--emerald); box-shadow: 0 0 8px var(--emerald); animation: pulse-led 2s ease-in-out infinite; }
+  @keyframes pulse-led{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+  .navlinks{ display:flex; gap: 34px; font-family: var(--mono); font-size: 12.5px; }
+  .navlinks a{ position:relative; color: var(--muted); transition: color .25s ease; padding: 4px 0; }
+  .navlinks a::after{
+    content:''; position:absolute; left:0; bottom:-2px; width:0; height:1px;
+    background: linear-gradient(90deg, var(--cyan), var(--coral)); transition: width .3s var(--ease);
+  }
+  .navlinks a:hover, .navlinks a.active{ color: var(--text); }
+  .navlinks a:hover::after, .navlinks a.active::after{ width:100%; }
+  @media (max-width:640px){ .navlinks{ display:none; } }
+
+  /* ================= hero ================= */
+  .hero{
+    min-height: 92vh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding: 60px 0 80px;
+    position: relative;
+  }
+  .hero-svg-wrap{
+    position:absolute; top:50%; right:-6%; transform:translateY(-50%);
+    width: 480px; height: 480px; opacity: .9; pointer-events:none;
+  }
+  @media (max-width:900px){ .hero-svg-wrap{ display:none; } }
+  .circuit-path{
+    fill:none; stroke: var(--line); stroke-width: 1.4;
+  }
+  .circuit-path.draw{
+    stroke: var(--coral);
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+    animation: draw 2.6s var(--ease) forwards;
+  }
+  .circuit-path.draw.amber{ stroke: var(--cyan); }
+  @keyframes draw{ to{ stroke-dashoffset: 0; } }
+  .circuit-node{ fill: var(--surface); stroke: var(--muted-2); stroke-width: 1.4; }
+  .circuit-node.lit{ stroke: var(--coral); animation: nodepulse 2.4s ease-in-out infinite; }
+  .circuit-node.lit2{ stroke: var(--cyan); animation: nodepulse 2.4s ease-in-out infinite; animation-delay: 1.2s; }
+  @keyframes nodepulse{ 0%,100%{ opacity:.5 } 50%{ opacity:1 } }
+
+  .eyebrow{
+    font-family: var(--mono); font-size: 12px; color: var(--cyan);
+    text-transform: uppercase; letter-spacing: 2.5px;
+    display:flex; align-items:center; gap:10px; margin-bottom: 22px;
+    opacity:0; transform: translateY(10px);
+    animation: fadeup .7s var(--ease) forwards; animation-delay: .15s;
+  }
+  .eyebrow::before{ content:''; width:22px; height:1px; background: var(--cyan); }
+
+  @keyframes fadeup{ to{ opacity:1; transform:translateY(0); } }
+
+  .hero h1{
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(2.6rem, 5.6vw, 4.4rem);
+    line-height: 1.06; letter-spacing: -1.5px;
+    max-width: 780px;
+    opacity:0; transform: translateY(16px);
+    animation: fadeup .8s var(--ease) forwards; animation-delay: .3s;
+  }
+  .hero h1 .accent{
+    background: linear-gradient(100deg, var(--cyan), var(--indigo-bright), var(--coral), var(--amber));
+    background-size: 300% auto;
+    -webkit-background-clip: text; background-clip:text; color: transparent;
+    animation: shimmer 6s ease-in-out infinite;
+  }
+  @keyframes shimmer{
+    0%{ background-position: 0% 50%; }
+    50%{ background-position: 100% 50%; }
+    100%{ background-position: 0% 50%; }
+  }
+
+  .role-line{
+    font-family: var(--mono); font-size: 15px; color: var(--muted);
+    margin-top: 22px; min-height: 22px;
+    opacity:0; animation: fadeup .8s var(--ease) forwards; animation-delay: .5s;
+  }
+  .role-line .cursor{ display:inline-block; width:8px; background: var(--amber); margin-left:2px; animation: blink .9s steps(1) infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .hero p.tagline{
+    font-size: 1.08rem; color: var(--muted); max-width: 540px; margin-top: 22px;
+    opacity:0; transform: translateY(14px);
+    animation: fadeup .8s var(--ease) forwards; animation-delay: .65s;
+  }
+  .hero p.tagline b{ color: var(--text); font-weight:600; }
+
+  .cta-row{
+    display:flex; gap:16px; flex-wrap:wrap; margin-top: 40px;
+    opacity:0; transform: translateY(14px);
+    animation: fadeup .8s var(--ease) forwards; animation-delay: .8s;
+  }
+
+  .btn{
+    font-family: var(--mono); font-size: 13px; letter-spacing:.3px;
+    padding: 14px 26px; border-radius: 4px; cursor:pointer;
+    border: none; color: #0B0E17;
+    background: linear-gradient(100deg, var(--cyan), var(--indigo-bright), var(--coral));
+    background-size: 220% auto; background-position: 0% 50%;
+    position: relative; overflow:hidden;
+    transition: transform .3s var(--ease), box-shadow .3s var(--ease), background-position .5s var(--ease);
+  }
+  .btn span{ position:relative; z-index:1; }
+  .btn:hover{ transform: translateY(-2px); background-position: 100% 50%; box-shadow: 0 10px 34px -8px rgba(139,92,246,0.55); }
+  .btn.ghost{ background: transparent; color: var(--muted); border: 1px solid var(--line); }
+  .btn.ghost:hover{ color: var(--cyan); border-color: var(--cyan); box-shadow: 0 10px 30px -10px rgba(34,211,238,0.35); background:transparent; }
+
+  .scroll-cue{
+    position:absolute; bottom: 20px; left:32px;
+    font-family: var(--mono); font-size: 10.5px; color: var(--muted-2);
+    display:flex; align-items:center; gap:10px;
+    opacity:0; animation: fadeup .8s var(--ease) forwards; animation-delay: 1.1s;
+  }
+  .scroll-cue .line{ width:1px; height:26px; background: var(--line); position:relative; overflow:hidden; }
+  .scroll-cue .line::after{
+    content:''; position:absolute; top:-100%; left:0; width:100%; height:100%;
+    background: var(--coral); animation: scrolldrop 1.8s ease-in-out infinite;
+  }
+  @keyframes scrolldrop{ 0%{top:-100%;} 60%{top:100%;} 100%{top:100%;} }
+
+  /* ================= sections ================= */
+  section{ padding: 110px 0; border-top: 1px solid var(--line-soft); }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom: 52px; flex-wrap:wrap; gap:14px; }
+  .section-title{ font-family: var(--display); font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight:600; letter-spacing:-.5px; }
+  .section-index{ font-family: var(--mono); font-size: 12px; color: var(--muted-2); }
+
+  .reveal{ opacity:0; transform: translateY(30px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .reveal.in{ opacity:1; transform: translateY(0); }
+  .stagger .reveal:nth-child(1){ transition-delay: 0s; }
+  .stagger .reveal:nth-child(2){ transition-delay: .08s; }
+  .stagger .reveal:nth-child(3){ transition-delay: .16s; }
+  .stagger .reveal:nth-child(4){ transition-delay: .24s; }
+
+  /* ================= about ================= */
+  .about-grid{ display:grid; grid-template-columns: 1.15fr .85fr; gap: 60px; align-items:start; }
+  @media (max-width:760px){ .about-grid{ grid-template-columns:1fr; } }
+  .about-grid p{ color: var(--muted); margin-bottom: 18px; font-size: 1rem; }
+  .about-grid p b{ color: var(--text); font-weight:600; }
+
+  .spec-card{
+    background: var(--surface); border:1px solid var(--line); border-radius:10px;
+    padding: 28px; font-family: var(--mono); font-size: 13px;
+    position: relative; overflow:hidden;
+  }
+  .spec-card::before{
+    content:'SPEC'; position:absolute; top:14px; right:16px;
+    font-size:10px; color: var(--muted-2); letter-spacing:2px;
+  }
+  .spec-card .row{
+    display:flex; justify-content:space-between; padding: 12px 0;
+    border-bottom: 1px dashed var(--line); color: var(--muted);
+  }
+  .spec-card .row:last-child{ border-bottom:none; }
+  .spec-card .row span:last-child{ color: var(--text); }
+  .spec-card .row .live{ color: var(--coral); display:flex; align-items:center; gap:6px; }
+  .spec-card .row .live::before{ content:''; width:6px; height:6px; border-radius:50%; background: var(--coral); box-shadow:0 0 8px var(--coral); animation: pulse-led 1.8s ease-in-out infinite; }
+
+  /* ================= skills ================= */
+  .skills-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: 20px; }
+  .skill-card{
+    background: var(--surface); border:1px solid var(--line); border-radius:10px;
+    padding: 26px; position:relative; overflow:hidden;
+    transition: transform .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease);
+    --acc: var(--coral);
+  }
+  .skill-card:nth-of-type(5n+1){ --acc: var(--coral); }
+  .skill-card:nth-of-type(5n+2){ --acc: var(--cyan); }
+  .skill-card:nth-of-type(5n+3){ --acc: var(--indigo-bright); }
+  .skill-card:nth-of-type(5n+4){ --acc: var(--emerald); }
+  .skill-card:nth-of-type(5n+5){ --acc: var(--amber); }
+  .skill-card::after{
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background: var(--acc); transform: scaleX(0); transform-origin:left;
+    transition: transform .4s var(--ease);
+  }
+  .skill-card:hover::after{ transform: scaleX(1); }
+  .skill-card::before{
+    content:''; position:absolute; inset:0; opacity:0;
+    background: radial-gradient(240px circle at var(--mx,50%) var(--my,50%), color-mix(in srgb, var(--acc) 18%, transparent), transparent 60%);
+    transition: opacity .4s ease;
+  }
+  .skill-card:hover::before{ opacity:1; }
+  .skill-card:hover{ transform: translateY(-6px); border-color: var(--acc); background: var(--surface-2); }
+  .skill-num{ font-family: var(--mono); font-size:11px; color: var(--acc); opacity:.8; }
+  .skill-card h3{ font-family: var(--display); font-size: 1.1rem; margin: 12px 0 10px; position:relative; }
+  .skill-card p{ font-size: 13.5px; color: var(--muted); position:relative; }
+  .skill-bar{ height:2px; background: var(--line); border-radius:2px; margin-top:18px; overflow:hidden; }
+  .skill-bar-fill{ height:100%; width:0%; background: var(--acc); box-shadow: 0 0 8px var(--acc); transition: width 1.4s var(--ease); }
+  .skill-card.in .skill-bar-fill{ width: var(--fill); }
+
+  /* ================= projects / timeline ================= */
+  .timeline{ position:relative; padding-left: 36px; }
+  .timeline::before{
+    content:''; position:absolute; left:6px; top:6px; bottom:6px; width:1px;
+    background: var(--line);
+  }
+  .timeline::after{
+    content:''; position:absolute; left:6px; top:6px; width:1px; height:0;
+    background: linear-gradient(var(--coral), var(--indigo));
+    transition: height 1.4s var(--ease);
+  }
+  .timeline.in::after{ height: calc(100% - 12px); }
+
+  .tl-item{ position:relative; margin-bottom: 44px; }
+  .tl-item:last-child{ margin-bottom:0; }
+  .tl-item:nth-of-type(5n+1){ --acc: var(--coral); }
+  .tl-item:nth-of-type(5n+2){ --acc: var(--cyan); }
+  .tl-item:nth-of-type(5n+3){ --acc: var(--emerald); }
+  .tl-item:nth-of-type(5n+4){ --acc: var(--indigo-bright); }
+  .tl-item:nth-of-type(5n+5){ --acc: var(--amber); }
+  .tl-dot{
+    position:absolute; left:-36px; top:6px; width:13px; height:13px; border-radius:50%;
+    background: var(--surface); border: 2px solid var(--line); z-index:2;
+    transition: border-color .4s ease, box-shadow .4s ease;
+  }
+  .tl-item.in .tl-dot{ border-color: var(--acc, var(--coral)); box-shadow: 0 0 12px var(--acc, var(--coral)); }
+
+  .project-card{
+    background: var(--surface); border:1px solid var(--line); border-radius: 12px;
+    padding: 36px; position:relative; overflow:hidden;
+  }
+  .project-card.featured{ border-color: rgba(251,113,133,0.4); }
+  .project-card .status{
+    position:absolute; top:26px; right:28px; font-family: var(--mono); font-size:11px;
+    color: var(--coral); border:1px solid rgba(251,113,133,.4); border-radius:20px; padding:5px 13px;
+    display:flex; align-items:center; gap:7px;
+  }
+  .project-card:not(.featured) .status{ color: var(--emerald); border-color: rgba(52,211,153,.4); }
+  .project-card .status .dot{ width:6px; height:6px; border-radius:50%; background: currentColor; box-shadow:0 0 8px currentColor; animation: pulse-led 1.8s ease-in-out infinite; }
+  .project-card h3{ font-family: var(--display); font-size: 1.55rem; margin-bottom: 12px; max-width: 78%; }
+  .project-card p.desc{ color: var(--muted); max-width: 580px; margin-bottom: 26px; }
+  .stack-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom: 30px; }
+  .stack-tag{ font-family: var(--mono); font-size:11px; border:1px solid var(--line); padding:6px 13px; border-radius:20px; }
+  .stack-tag:nth-of-type(5n+1){ color: var(--indigo-bright); }
+  .stack-tag:nth-of-type(5n+2){ color: var(--cyan); }
+  .stack-tag:nth-of-type(5n+3){ color: var(--coral); }
+  .stack-tag:nth-of-type(5n+4){ color: var(--emerald); }
+  .stack-tag:nth-of-type(5n+5){ color: var(--amber); }
+
+  .flow-svg{ width:100%; height:auto; }
+  .flow-box{ fill: var(--surface-2); stroke: var(--line); stroke-width:1.2; rx:6; }
+  .flow-label{ font-family: var(--mono); font-size:12px; fill: var(--text); }
+  .flow-line{ stroke: var(--line); stroke-width:1.4; fill:none; }
+  .flow-current{ stroke-width:2; fill:none; stroke-linecap:round; stroke-dasharray: 6 300; }
+  .flow-current.a1{ stroke: var(--cyan); filter: drop-shadow(0 0 4px var(--cyan)); animation: flowdash 2.4s linear infinite; }
+  .flow-current.a2{ stroke: var(--coral); filter: drop-shadow(0 0 4px var(--coral)); animation: flowdash 2.4s linear infinite; animation-delay: .8s; }
+  .flow-current.a3{ stroke: var(--amber); filter: drop-shadow(0 0 4px var(--amber)); animation: flowdash 2.4s linear infinite; animation-delay: 1.6s; }
+  @keyframes flowdash{ from{ stroke-dashoffset: 0; } to{ stroke-dashoffset: -306; } }
+
+  .hack-strip{
+    display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    background: var(--surface); border:1px solid var(--line);
+    padding: 24px 30px; border-radius: 8px;
+  }
+  .hack-strip:nth-of-type(1), .tl-item:nth-of-type(3) .hack-strip{ border-left: 3px solid var(--emerald); }
+  .tl-item:nth-of-type(4) .hack-strip{ border-left: 3px solid var(--indigo-bright); }
+  .hack-strip .label{ font-family: var(--mono); font-size:11px; letter-spacing:1.5px; margin-bottom:6px; color: var(--cyan); }
+  .hack-strip h4{ font-family: var(--display); font-size: 1.15rem; font-weight:600; }
+  .hack-strip p{ color: var(--muted); font-size: 13.5px; margin-top:5px; max-width: 520px; }
+  .hack-strip .badge{ font-family: var(--mono); font-size:11px; color: var(--amber); border:1px solid rgba(251,191,36,.4); padding:8px 16px; border-radius:20px; white-space:nowrap; }
+
+  /* ================= contact ================= */
+  .contact-wrap{ display:grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width:700px){ .contact-wrap{ grid-template-columns:1fr; } }
+  .contact-card{
+    background: var(--surface); border:1px solid var(--line); border-radius:10px;
+    padding: 26px; display:flex; align-items:center; gap:18px; cursor:pointer;
+    transition: border-color .3s ease, transform .3s var(--ease), background .3s ease;
+    position: relative;
+  }
+  .contact-card:nth-of-type(1) .icon{ border-color: var(--cyan); color: var(--cyan); }
+  .contact-card:nth-of-type(2) .icon{ border-color: var(--coral); color: var(--coral); }
+  .contact-card:nth-of-type(1):hover{ border-color: var(--cyan); transform: translateY(-3px); background: var(--surface-2); }
+  .contact-card:nth-of-type(2):hover{ border-color: var(--coral); transform: translateY(-3px); background: var(--surface-2); }
+  .contact-card .icon{
+    width:44px; height:44px; border-radius:50%; border:1px solid var(--indigo);
+    display:flex; align-items:center; justify-content:center; color: var(--indigo-bright);
+    flex-shrink:0; font-family: var(--mono); font-size:16px;
+  }
+  .contact-card .label{ font-family: var(--mono); font-size:11px; color: var(--muted); letter-spacing:1.5px; margin-bottom:5px; }
+  .contact-card .value{ font-size: 14.5px; word-break: break-word; }
+  .copy-hint{ position:absolute; right:20px; font-family: var(--mono); font-size:10.5px; color: var(--muted-2); opacity:0; transition: opacity .25s ease; }
+  .contact-card:hover .copy-hint{ opacity:1; }
+  .copy-hint.copied{ color: var(--coral); opacity:1; }
+
+  footer{ padding: 46px 0 60px; border-top: 1px solid var(--line-soft); }
+  footer .container{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-family: var(--mono); font-size:12px; color: var(--muted-2); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+  a:focus-visible, button:focus-visible, .contact-card:focus-visible{ outline: 2px solid var(--coral); outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <div class="pre-mark">
+    <span>INITIALIZING PORTFOLIO…</span>
+    <div class="pre-bar"></div>
+  </div>
+</div>
+
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="glow-orb one" aria-hidden="true"></div>
+<div class="glow-orb two" aria-hidden="true"></div>
+<div class="glow-orb three" aria-hidden="true"></div>
+
+<header id="siteHeader">
+  <div class="container">
+    <nav>
+      <div class="logo"><span class="led"></span>MD // electrical.eng</div>
+      <div class="navlinks">
+        <a href="#about" class="nl">About</a>
+        <a href="#skills" class="nl">Skills</a>
+        <a href="#projects" class="nl">Projects</a>
+        <a href="#contact" class="nl">Contact</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <section class="hero">
+      <div class="hero-svg-wrap" aria-hidden="true">
+        <svg viewBox="0 0 400 400" fill="none">
+          <path class="circuit-path draw" d="M40 340 L40 220 L120 220 L120 140 L200 140" />
+          <path class="circuit-path draw amber" d="M360 60 L360 160 L280 160 L280 260 L200 260 L200 140" />
+          <path class="circuit-path" d="M200 140 L200 60 L120 60" />
+          <path class="circuit-path" d="M200 260 L120 260 L120 340 L200 340" />
+          <circle class="circuit-node lit" cx="200" cy="140" r="7"/>
+          <circle class="circuit-node lit2" cx="200" cy="260" r="7"/>
+          <circle class="circuit-node" cx="40" cy="340" r="6"/>
+          <circle class="circuit-node" cx="360" cy="60" r="6"/>
+          <circle class="circuit-node" cx="120" cy="60" r="5"/>
+          <circle class="circuit-node" cx="200" cy="340" r="5"/>
+        </svg>
+      </div>
+
+      <div class="eyebrow">Electrical Engineering · B.Tech</div>
+      <h1>Mahesh Dandhare<br>engineers <span class="accent">signal into safety.</span></h1>
+      <div class="role-line" id="roleLine"></div>
+      <p class="tagline">B.Tech Electrical Engineering student focused on <b>embedded systems</b> and <b>sensor integration</b> — turning raw hardware signals into real-world alerts using Arduino and Python.</p>
+      <div class="cta-row">
+        <button class="btn" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})"><span>View Project →</span></button>
+        <button class="btn ghost" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})"><span>Get in Touch</span></button>
+      </div>
+      <div class="scroll-cue"><div class="line"></div>SCROLL</div>
+    </section>
+
+    <section id="about">
+      <div class="section-head reveal">
+        <h2 class="section-title">About</h2>
+        <span class="section-index">01 / 04</span>
+      </div>
+      <div class="about-grid">
+        <div class="reveal">
+          <p>I'm an <b>Electrical Engineering undergraduate</b> who likes working close to the hardware — where a signal from a sensor becomes a decision an Arduino can act on. My interest sits at the intersection of <b>circuits, embedded code, and real-world safety problems</b>.</p>
+          <p>Alongside coursework, I compete at the <b>BME Hackathon</b> and the <b>PPS Hackathon (Programme for Problem Solving)</b>, applying electrical engineering fundamentals and structured programming logic to real challenges under time pressure — sharpening how fast I can move from idea to working prototype.</p>
+          <p>Right now my focus is my minor project: an <b>Alcohol Detection &amp; Alert System</b>, built to show how a simple sensor circuit can trigger a meaningful safety response.</p>
+        </div>
+        <div class="spec-card reveal">
+          <div class="row"><span>role</span><span>EE Undergraduate</span></div>
+          <div class="row"><span>focus</span><span>Embedded Systems</span></div>
+          <div class="row"><span>hardware</span><span>Arduino</span></div>
+          <div class="row"><span>languages</span><span>Python, C, C++</span></div>
+          <div class="row"><span>competitions</span><span>BME · PPS Hackathon</span></div>
+          <div class="row"><span>status</span><span class="live">Building</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="section-head reveal">
+        <h2 class="section-title">Skills</h2>
+        <span class="section-index">02 / 04</span>
+      </div>
+      <div class="skills-grid stagger">
+        <div class="skill-card reveal" style="--fill:88%">
+          <div class="skill-num">01</div>
+          <h3>Arduino Development</h3>
+          <p>Designing and programming Arduino-based circuits — from sensor wiring to microcontroller logic.</p>
+          <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+        </div>
+        <div class="skill-card reveal" style="--fill:82%">
+          <div class="skill-num">02</div>
+          <h3>Sensor Integration</h3>
+          <p>Interfacing analog and digital sensors with microcontrollers to capture and act on real-world data.</p>
+          <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+        </div>
+        <div class="skill-card reveal" style="--fill:78%">
+          <div class="skill-num">03</div>
+          <h3>Python</h3>
+          <p>Using Python for data handling, automation, and supporting logic around embedded projects.</p>
+          <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+        </div>
+        <div class="skill-card reveal" style="--fill:75%">
+          <div class="skill-num">04</div>
+          <h3>C &amp; C++</h3>
+          <p>Writing efficient C/C++ for microcontroller firmware and core problem-solving logic.</p>
+          <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+        </div>
+        <div class="skill-card reveal" style="--fill:85%">
+          <div class="skill-num">05</div>
+          <h3>Rapid Prototyping</h3>
+          <p>Building working prototypes under hackathon time constraints, honed through BME and PPS hackathons.</p>
+          <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+        </div>
+        <div class="skill-card reveal" style="--fill:80%">
+          <div class="skill-num">06</div>
+          <h3>Problem Solving</h3>
+          <p>Structured programming logic and algorithmic problem-solving, sharpened at the PPS Hackathon.</p>
+          <div class="skill-bar"><div class="skill-bar-fill"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="section-head reveal">
+        <h2 class="section-title">Projects</h2>
+        <span class="section-index">03 / 04</span>
+      </div>
+
+      <div class="timeline">
+        <div class="tl-item reveal">
+          <div class="tl-dot"></div>
+          <div class="project-card featured">
+            <div class="status"><span class="dot"></span>IN PROGRESS</div>
+            <h3>Alcohol Detection &amp; Alert System</h3>
+            <p class="desc">A minor project built around a gas sensor and Arduino microcontroller that detects alcohol concentration in real time and triggers an immediate alert — aimed at flagging impaired states before they become a hazard, such as behind the wheel.</p>
+            <div class="stack-row">
+              <span class="stack-tag">Arduino</span>
+              <span class="stack-tag">Gas Sensor</span>
+              <span class="stack-tag">Alert Circuit</span>
+              <span class="stack-tag">Embedded C</span>
+            </div>
+            <svg class="flow-svg" viewBox="0 0 620 90" fill="none">
+              <rect class="flow-box" x="0" y="28" width="130" height="36" rx="6"/>
+              <text class="flow-label" x="65" y="50" text-anchor="middle">Sensor Input</text>
+              <path class="flow-line" d="M130 46 H210" />
+              <path class="flow-current a1" d="M130 46 H210" />
+              <rect class="flow-box" x="210" y="28" width="130" height="36" rx="6"/>
+              <text class="flow-label" x="275" y="50" text-anchor="middle">Arduino Logic</text>
+              <path class="flow-line" d="M340 46 H420" />
+              <path class="flow-current a2" d="M340 46 H420" />
+              <rect class="flow-box" x="420" y="28" width="90" height="36" rx="6"/>
+              <text class="flow-label" x="465" y="50" text-anchor="middle">Threshold</text>
+              <path class="flow-line" d="M510 46 H590" />
+              <path class="flow-current a3" d="M510 46 H590" />
+              <circle cx="600" cy="46" r="10" fill="none" stroke="#FF8F6B" stroke-width="1.4"/>
+              <text class="flow-label" x="600" y="82" text-anchor="middle" style="fill:#8790A3; font-size:10.5px;">ALERT</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="tl-item reveal">
+          <div class="tl-dot"></div>
+          <div class="project-card">
+            <div class="status"><span class="dot"></span>HACKATHON BUILD</div>
+            <h3>Lung Indicator Capacitor Device</h3>
+            <p class="desc">Built at the BME Hackathon — a capacitor-based sensing device designed to indicate lung-related readings, applying electrical engineering principles to a biomedical problem statement under competition time constraints.</p>
+            <div class="stack-row">
+              <span class="stack-tag">Capacitor Sensing</span>
+              <span class="stack-tag">Circuit Design</span>
+              <span class="stack-tag">Biomedical Application</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item reveal">
+          <div class="tl-dot"></div>
+          <div class="hack-strip">
+            <div>
+              <div class="label">COMPETITION</div>
+              <h4>BME Hackathon</h4>
+              <p>Applying electrical engineering skills to biomedical engineering problem statements in a competitive, time-boxed format.</p>
+            </div>
+            <div class="badge">Participant</div>
+          </div>
+        </div>
+
+        <div class="tl-item reveal">
+          <div class="tl-dot"></div>
+          <div class="hack-strip">
+            <div>
+              <div class="label">COMPETITION</div>
+              <h4>PPS Hackathon <span style="color:var(--muted); font-weight:400;">— Programme for Problem Solving</span></h4>
+              <p>Solving structured programming and logic challenges in C/C++ and Python under competitive time pressure.</p>
+            </div>
+            <div class="badge">Participant</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="section-head reveal">
+        <h2 class="section-title">Contact</h2>
+        <span class="section-index">04 / 04</span>
+      </div>
+      <div class="contact-wrap stagger">
+        <div class="contact-card reveal" tabindex="0" data-copy="8208728661">
+          <div class="icon">☎</div>
+          <div>
+            <div class="label">PHONE</div>
+            <div class="value">8208728661</div>
+          </div>
+          <span class="copy-hint">click to copy</span>
+        </div>
+        <div class="contact-card reveal" tabindex="0" data-copy="Maheshdandhare599@gmail.com">
+          <div class="icon">@</div>
+          <div>
+            <div class="label">EMAIL</div>
+            <div class="value">Maheshdandhare599@gmail.com</div>
+          </div>
+          <span class="copy-hint">click to copy</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <span>© 2026 Mahesh Dandhare</span>
+    <span>Built with Arduino, Python &amp; curiosity</span>
+  </div>
+</footer>
+
+<script>
+  // preloader
+  window.addEventListener('load', ()=>{
+    setTimeout(()=> document.getElementById('preloader').classList.add('done'), 500);
+  });
+
+  // header scroll state
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', ()=>{
+    header.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive:true });
+
+  // active nav link on scroll
+  const sections = ['about','skills','projects','contact'].map(id=>document.getElementById(id));
+  const navLinks = document.querySelectorAll('.nl');
+  const navObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        navLinks.forEach(l=>l.classList.remove('active'));
+        const match = document.querySelector('.nl[href="#'+entry.target.id+'"]');
+        if(match) match.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+  sections.forEach(s=> s && navObserver.observe(s));
+
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // skill bar fill trigger
+  document.querySelectorAll('.skill-card').forEach(card=>{
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); }
+      });
+    }, { threshold:.3 });
+    obs.observe(card);
+  });
+
+  // timeline growth
+  document.querySelectorAll('.timeline').forEach(tl=>{
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
+    }, { threshold:.1 });
+    obs.observe(tl);
+  });
+  document.querySelectorAll('.tl-item').forEach(item=>{
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
+    }, { threshold:.3 });
+    obs.observe(item);
+  });
+
+  // skill card mouse-follow glow
+  document.querySelectorAll('.skill-card').forEach(card=>{
+    card.addEventListener('mousemove', (e)=>{
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  // typing role line
+  const roles = ['Embedded Systems Builder', 'Sensor Integration Enthusiast', 'Arduino · Python · C/C++', 'BME & PPS Hackathon Participant'];
+  const roleEl = document.getElementById('roleLine');
+  let ri = 0, ci = 0, deleting = false;
+  function typeLoop(){
+    const word = roles[ri];
+    if(!deleting){
+      ci++;
+      if(ci > word.length){ deleting = true; setTimeout(typeLoop, 1400); return; }
+    } else {
+      ci--;
+      if(ci < 0){ deleting = false; ri = (ri+1) % roles.length; ci = 0; }
+    }
+    roleEl.innerHTML = '&gt; ' + word.slice(0, ci) + '<span class="cursor">&nbsp;</span>';
+    setTimeout(typeLoop, deleting ? 35 : 65);
+  }
+  typeLoop();
+
+  // copy to clipboard on contact cards
+  document.querySelectorAll('.contact-card').forEach(card=>{
+    const hint = card.querySelector('.copy-hint');
+    function doCopy(){
+      const val = card.getAttribute('data-copy');
+      navigator.clipboard && navigator.clipboard.writeText(val).then(()=>{
+        hint.textContent = 'copied ✓';
+        hint.classList.add('copied');
+        setTimeout(()=>{ hint.textContent = 'click to copy'; hint.classList.remove('copied'); }, 1600);
+      });
+    }
+    card.addEventListener('click', doCopy);
+    card.addEventListener('keypress', (e)=>{ if(e.key === 'Enter') doCopy(); });
+  });
+</script>
+
+</body>
+</html>
